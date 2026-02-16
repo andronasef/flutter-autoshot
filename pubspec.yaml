@@ -1,0 +1,23 @@
+name: autoshot
+version: 1.0.0
+description: >
+  A device_preview plugin that automates generating App Store / Play Store
+  screenshots across multiple devices, locales, and screens. Runs entirely
+  in Flutter Web and outputs a downloadable ZIP archive.
+homepage: https://github.com/aloisdeniel/flutter_device_preview/plugins/autoshot
+
+environment:
+  sdk: ">=3.8.0 <4.0.0"
+  flutter: ">=3.32.0"
+
+dependencies:
+  device_preview: ^1.0.0
+  flutter:
+    sdk: flutter
+  provider: ^6.1.2
+  archive: ^4.0.4
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
