@@ -144,15 +144,17 @@ class _AutoshotToolbarState extends State<AutoshotToolbar> {
       if (!mounted) return;
 
       setState(() => _statusText = 'Packaging downloads…');
+      String destination = '';
 
       // ── Deliver results ─────────────────────────────────────
       switch (widget.delivery) {
         case AutoshotDelivery.zip:
-          await downloader.downloadScreenshotsAsZip(results);
+          destination = await downloader.downloadScreenshotsAsZip(results);
           break;
         case AutoshotDelivery.individual:
           for (final shot in results) {
-            await downloader.downloadFile(shot.fileName, shot.bytes);
+            destination =
+                await downloader.downloadFile(shot.fileName, shot.bytes);
             // Small delay to avoid browser download throttling.
             await Future.delayed(const Duration(milliseconds: 200));
           }
@@ -160,7 +162,11 @@ class _AutoshotToolbarState extends State<AutoshotToolbar> {
       }
 
       if (mounted) {
-        _showSnackBar('✓ ${results.length} screenshots generated!');
+        final suffix =
+            destination.isNotEmpty && destination != 'browser-download'
+                ? ' Saved to: $destination'
+                : '';
+        _showSnackBar('✓ ${results.length} screenshots generated!$suffix');
       }
     } catch (e, stack) {
       debugPrint('Store screenshot error: $e\n$stack');

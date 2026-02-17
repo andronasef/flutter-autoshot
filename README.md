@@ -1,6 +1,6 @@
 # Autoshot
 
-A **[device_preview](https://pub.dev/packages/device_preview)** wrapper plugin that automates generating App Store / Play Store screenshots across multiple devices, locales, and screens — entirely from the Flutter Web runner.
+A **[device_preview](https://pub.dev/packages/device_preview)** wrapper plugin that automates generating App Store / Play Store screenshots across multiple devices, locales, and screens.
 
 `autoshot` wraps `device_preview` as a dependency, so you only need to add `autoshot` to your project — no need to depend on `device_preview` separately.
 
@@ -17,7 +17,7 @@ This plugin turns that into a single button click.
 - **Programmatic control**: updates the `DevicePreview` state (device, locale) without user interaction
 - **Render-safe**: waits for frames to settle after each state change before capturing
 - **Web-optimised**: captures via `RepaintBoundary` → `toImage()` → PNG bytes
-- **ZIP download**: bundles all screenshots into a single `.zip` and triggers a browser download
+- **Flexible export**: browser download on Web, file export on mobile/desktop
 - **Progress UI**: shows a live progress bar in the device_preview toolbar
 - **Naming convention**: `device_name_locale_screen_name.png`
 
@@ -25,7 +25,7 @@ This plugin turns that into a single button click.
 
 ```yaml
 dependencies:
-  autoshot: ^1.1.0
+  autoshot: ^1.2.0
 ```
 
 > **Note:** You do **not** need to add `device_preview` separately. It is re-exported by `autoshot`.
@@ -215,7 +215,7 @@ The plugin will:
 3. Select the target screen (route navigation or widget mode)
 4. Wait for the frame to settle
 5. Capture the pixels as PNG
-6. Package everything into a `.zip` and trigger a browser download
+6. Deliver screenshots as browser downloads (Web) or exported files (non-Web)
 
 ## Configuration
 
@@ -258,7 +258,7 @@ AutoshotController        ← shared state (widget mode screen override)
                   ├── optional screen.prepare()
                         ├── waits for frame settle
                         ├── captures via DevicePreview.screenshot()
-                        └── packages results → ZIP → browser download
+                        └── packages results → download/export destination
 ```
 
 ## Output
@@ -277,10 +277,12 @@ autoshot/
 
 ## Platform Support
 
-| Platform       | Status                                                         |
-| -------------- | -------------------------------------------------------------- |
-| Web            | ✅ Full support (ZIP download)                                 |
-| Mobile/Desktop | ⚠️ Capture works, but download requires a file-based processor |
+| Platform | Status                                               |
+| -------- | ---------------------------------------------------- |
+| Web      | ✅ Full support (ZIP + individual browser downloads) |
+| Android  | ✅ Saves files to `Download/autoshot` when available |
+| iOS      | ✅ Saves files to app Documents/autoshot             |
+| Desktop  | ✅ Saves files to Downloads/autoshot when available  |
 
 ## License
 

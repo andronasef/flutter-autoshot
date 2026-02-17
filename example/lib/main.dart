@@ -27,7 +27,7 @@ void main() {
             },
           ),
         ],
-        locales: const [Locale('en', 'US')],
+        locales: const [Locale('en', 'US'), Locale('ar', 'SA')],
         devices: [Devices.ios.iPhone13ProMax],
         theme: ThemeData(colorSchemeSeed: Colors.indigo, useMaterial3: true),
         darkTheme: ThemeData(
@@ -75,14 +75,19 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final languageCode = Localizations.localeOf(context).languageCode;
+    final isArabic = languageCode == 'ar';
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Home')),
+      appBar: AppBar(title: Text(isArabic ? 'الرئيسية' : 'Home')),
       body: ListView.builder(
         itemCount: 20,
         itemBuilder: (context, index) => ListTile(
           leading: CircleAvatar(child: Text('${index + 1}')),
-          title: Text('Item ${index + 1}'),
-          subtitle: const Text('Tap to see details'),
+          title: Text('${isArabic ? 'عنصر' : 'Item'} ${index + 1}'),
+          subtitle: Text(
+            isArabic ? 'اضغط لعرض التفاصيل' : 'Tap to see details',
+          ),
           onTap: () {},
         ),
       ),
@@ -99,8 +104,11 @@ class DetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final languageCode = Localizations.localeOf(context).languageCode;
+    final isArabic = languageCode == 'ar';
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Detail')),
+      appBar: AppBar(title: Text(isArabic ? 'التفاصيل' : 'Detail')),
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -112,12 +120,14 @@ class DetailScreen extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             Text(
-              'Beautiful Detail View',
+              isArabic ? 'واجهة تفاصيل جميلة' : 'Beautiful Detail View',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             const SizedBox(height: 8),
             Text(
-              'This screen is captured for every device and locale.',
+              isArabic
+                  ? 'يتم التقاط هذه الشاشة لكل جهاز ولكل لغة.'
+                  : 'This screen is captured for every device and locale.',
               style: Theme.of(context).textTheme.bodyMedium,
             ),
           ],

@@ -17,7 +17,8 @@ import '../runner.dart';
 ///   iphone_14_pro_fr_fr_home.png
 ///   ...
 /// ```
-Future<void> downloadScreenshotsAsZip(List<AutoshotCapture> screenshots) async {
+Future<String> downloadScreenshotsAsZip(
+    List<AutoshotCapture> screenshots) async {
   final archive = Archive();
 
   for (final shot in screenshots) {
@@ -36,11 +37,13 @@ Future<void> downloadScreenshotsAsZip(List<AutoshotCapture> screenshots) async {
     ..click();
 
   html.Url.revokeObjectUrl(url);
+
+  return 'browser-download';
 }
 
 /// Triggers a browser download for a single file with the given
 /// [fileName] and raw [bytes].
-Future<void> downloadFile(String fileName, Uint8List bytes) async {
+Future<String> downloadFile(String fileName, Uint8List bytes) async {
   final blob = html.Blob([bytes], 'image/png');
   final url = html.Url.createObjectUrlFromBlob(blob);
 
@@ -49,4 +52,6 @@ Future<void> downloadFile(String fileName, Uint8List bytes) async {
     ..click();
 
   html.Url.revokeObjectUrl(url);
+
+  return 'browser-download';
 }

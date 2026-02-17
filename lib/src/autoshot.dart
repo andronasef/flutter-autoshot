@@ -73,10 +73,10 @@ class Autoshot extends StatefulWidget {
   /// The default selected device when opening device preview.
   final DeviceInfo? defaultDevice;
 
-  /// Additional toolbar tools to include **before** the autoshot section.
+  /// Additional toolbar tools to include after the autoshot section.
   ///
   /// When `null`, [DevicePreview.defaultTools] are used.
-  /// The autoshot toolbar is always appended automatically.
+  /// The autoshot toolbar is always inserted first automatically.
   final List<Widget>? tools;
 
   /// The storage used to persist device preview preferences.
@@ -126,12 +126,12 @@ class _AutoshotState extends State<Autoshot> {
       builder: (context) =>
           AutoshotApp(controller: _controller, child: widget.builder(context)),
       tools: [
-        ...baseTools,
         AutoshotToolbar(
           controller: _controller,
           config: widget.config,
           delivery: widget.delivery,
         ),
+        ...baseTools,
       ],
     );
   }

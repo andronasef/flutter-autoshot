@@ -12,8 +12,8 @@ import 'controller.dart';
 /// [current] is 1-based, [total] is the overall count.
 /// [description] provides a human-readable label like
 /// `"iPhone 14 Pro / en / home"`.
-typedef AutoshotProgressCallback =
-    void Function(int current, int total, String description);
+typedef AutoshotProgressCallback = void Function(
+    int current, int total, String description);
 
 /// A single captured screenshot with its metadata and pixel data.
 class AutoshotCapture {
@@ -94,7 +94,7 @@ class AutoshotRunner {
 
         for (final locale in config.locales) {
           // ── Set locale ──────────────────────────────────────────
-          store.data = store.data.copyWith(locale: locale.toString());
+          store.data = store.data.copyWith(locale: locale.toLanguageTag());
 
           for (final screen in config.screens) {
             current++;

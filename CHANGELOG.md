@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.2.0
+
+- Saved captures to a real file location on non-web platforms instead of throwing unsupported download errors.
+- On Android phones, screenshots are exported to the Downloads folder when available.
+- Fixed locale switching during capture by using a DevicePreview-compatible locale tag format.
+- Moved the Autoshot section to the top of DevicePreview tools when using the `Autoshot` wrapper.
+- Updated example locales/content so locale-based screenshot differences are visible.
+
 ## 1.1.2
 
 - Updated SDK constraints for better compatibility.
