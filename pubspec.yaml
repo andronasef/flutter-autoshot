@@ -5,8 +5,7 @@ description:
   devices, locales, and screens. Runs in Flutter Web and outputs a ZIP archive.
 homepage: https://github.com/andronasef/autoshot
 environment:
-  sdk: ">=3.8.0 <4.0.0"
-  flutter: ">=3.32.0"
+  sdk: ^3.0.0
 
 dependencies:
   device_preview: ^1.3.1
