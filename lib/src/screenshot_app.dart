@@ -32,11 +32,7 @@ import 'controller.dart';
 /// ```
 class AutoshotApp extends StatelessWidget {
   /// Creates an [AutoshotApp].
-  const AutoshotApp({
-    super.key,
-    required this.controller,
-    required this.child,
-  });
+  const AutoshotApp({super.key, required this.controller, required this.child});
 
   /// The controller shared with the toolbar plugin widget.
   final AutoshotController controller;

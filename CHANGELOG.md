@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.1.0
+
+- Fixed `DevicePreview` compatibility issues with `backgroundColor` and `padding`.
+- Updated homepage URL.
+- Optimized package description for pub.dev.
+- Improved dependency constraints.
+
 ## 1.0.0
 
 - Initial release of **autoshot**.

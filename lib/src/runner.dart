@@ -12,11 +12,8 @@ import 'controller.dart';
 /// [current] is 1-based, [total] is the overall count.
 /// [description] provides a human-readable label like
 /// `"iPhone 14 Pro / en / home"`.
-typedef AutoshotProgressCallback = void Function(
-  int current,
-  int total,
-  String description,
-);
+typedef AutoshotProgressCallback =
+    void Function(int current, int total, String description);
 
 /// A single captured screenshot with its metadata and pixel data.
 class AutoshotCapture {
@@ -50,10 +47,7 @@ class AutoshotCapture {
 /// for the frame to settle, and capturing the rendered pixels.
 class AutoshotRunner {
   /// Creates a runner with the given [config] and [controller].
-  AutoshotRunner({
-    required this.config,
-    required this.controller,
-  });
+  AutoshotRunner({required this.config, required this.controller});
 
   /// The screenshot configuration.
   final AutoshotConfig config;
@@ -109,10 +103,22 @@ class AutoshotRunner {
             onProgress?.call(current, total, description);
 
             // ── Set screen content ────────────────────────────────
-            controller.showScreen(
+            if (screen.isRouteBased) {
+              controller.reset();
               // ignore: use_build_context_synchronously
-              _wrapScreen(context, screen, locale),
-            );
+              await screen.navigate!(context);
+            } else {
+              controller.showScreen(
+                // ignore: use_build_context_synchronously
+                _wrapScreen(context, screen, locale),
+              );
+            }
+
+            // ── Optional screen preparation ───────────────────────
+            if (screen.prepare != null) {
+              // ignore: use_build_context_synchronously
+              await screen.prepare!(context);
+            }
 
             // ── Wait for frame to settle ──────────────────────────
             await _settle();
@@ -122,13 +128,15 @@ class AutoshotRunner {
             final bytes = await _capture(context, store);
 
             final fileName = _buildFileName(device, locale, screen);
-            results.add(AutoshotCapture(
-              fileName: fileName,
-              bytes: bytes,
-              device: device,
-              locale: locale,
-              screenName: screen.name,
-            ));
+            results.add(
+              AutoshotCapture(
+                fileName: fileName,
+                bytes: bytes,
+                device: device,
+                locale: locale,
+                screenName: screen.name,
+              ),
+            );
           }
         }
       }
@@ -149,11 +157,7 @@ class AutoshotRunner {
 
   /// Wraps a [ScreenEntry] in a configured [MaterialApp] that respects
   /// the DevicePreview simulation (locale, theme, media query).
-  Widget _wrapScreen(
-    BuildContext context,
-    ScreenEntry screen,
-    Locale locale,
-  ) {
+  Widget _wrapScreen(BuildContext context, ScreenEntry screen, Locale locale) {
     return MaterialApp(
       // ignore: deprecated_member_use
       useInheritedMediaQuery: true,
@@ -164,7 +168,7 @@ class AutoshotRunner {
       localizationsDelegates: config.localizationsDelegates,
       supportedLocales: config.supportedLocales ?? config.locales,
       debugShowCheckedModeBanner: false,
-      home: Builder(builder: screen.builder),
+      home: Builder(builder: screen.builder!),
     );
   }
 

@@ -17,18 +17,12 @@ import '../runner.dart';
 ///   iphone_14_pro_fr_fr_home.png
 ///   ...
 /// ```
-Future<void> downloadScreenshotsAsZip(
-  List<AutoshotCapture> screenshots,
-) async {
+Future<void> downloadScreenshotsAsZip(List<AutoshotCapture> screenshots) async {
   final archive = Archive();
 
   for (final shot in screenshots) {
     archive.addFile(
-      ArchiveFile(
-        'autoshot/${shot.fileName}',
-        shot.bytes.length,
-        shot.bytes,
-      ),
+      ArchiveFile('autoshot/${shot.fileName}', shot.bytes.length, shot.bytes),
     );
   }
 

@@ -25,7 +25,7 @@ This plugin turns that into a single button click.
 
 ```yaml
 dependencies:
-  autoshot: ^1.0.0
+  autoshot: ^1.1.0
 ```
 
 > **Note:** You do **not** need to add `device_preview` separately. It is re-exported by `autoshot`.
@@ -42,8 +42,8 @@ Just wrap your app in `Autoshot` — that's it:
 Autoshot(
   config: AutoshotConfig(
     screens: [
-      ScreenEntry(name: 'home', builder: (_) => HomeScreen()),
-      ScreenEntry(name: 'profile', builder: (_) => ProfileScreen()),
+      ScreenEntry.widget(name: 'home', builder: (_) => HomeScreenMockup()),
+      ScreenEntry.widget(name: 'profile', builder: (_) => ProfileScreen()),
     ],
     locales: [Locale('en', 'US'), Locale('fr', 'FR'), Locale('ar')],
     devices: [
@@ -84,8 +84,8 @@ DevicePreview(
       controller: controller,
       config: AutoshotConfig(
         screens: [
-          ScreenEntry(name: 'home', builder: (_) => HomeScreen()),
-          ScreenEntry(name: 'profile', builder: (_) => ProfileScreen()),
+          ScreenEntry.widget(name: 'home', builder: (_) => HomeScreen()),
+          ScreenEntry.widget(name: 'profile', builder: (_) => ProfileScreen()),
         ],
         locales: [Locale('en', 'US'), Locale('fr', 'FR'), Locale('ar')],
         devices: [
@@ -101,13 +101,118 @@ DevicePreview(
 
 </details>
 
+## Preferred for real apps: Route-based capture
+
+When screens depend on providers, DI containers, or initialization that lives in your app shell,
+use `ScreenEntry.route(...)` so captures run through your real `MaterialApp` and navigator.
+
+```dart
+final appNavigatorKey = GlobalKey<NavigatorState>();
+
+Autoshot(
+  config: AutoshotConfig(
+    screens: [
+      ScreenEntry.route(
+        name: 'home',
+        navigate: (_) async {
+          appNavigatorKey.currentState?.pushNamedAndRemoveUntil(
+            '/home',
+            (route) => false,
+          );
+        },
+      ),
+      ScreenEntry.route(
+        name: 'profile',
+        navigate: (_) async {
+          appNavigatorKey.currentState?.pushNamedAndRemoveUntil(
+            '/profile',
+            (route) => false,
+          );
+        },
+      ),
+    ],
+    locales: [Locale('en', 'US')],
+    devices: [Devices.ios.iPhone14Pro],
+  ),
+  builder: (_) => MyApp(navigatorKey: appNavigatorKey),
+)
+```
+
+Optional per-screen async preparation is available via `prepare:`.
+
+### Complete route example
+
+```dart
+import 'package:autoshot/autoshot.dart';
+import 'package:flutter/material.dart';
+
+final appNavigatorKey = GlobalKey<NavigatorState>();
+
+void main() {
+  runApp(
+    Autoshot(
+      config: AutoshotConfig(
+        screens: [
+          ScreenEntry.route(
+            name: 'home',
+            navigate: (_) async {
+              appNavigatorKey.currentState?.pushNamedAndRemoveUntil(
+                '/home',
+                (route) => false,
+              );
+            },
+          ),
+          ScreenEntry.route(
+            name: 'profile',
+            navigate: (_) async {
+              appNavigatorKey.currentState?.pushNamedAndRemoveUntil(
+                '/profile',
+                (route) => false,
+              );
+            },
+            prepare: (_) async {
+              await Future.delayed(const Duration(milliseconds: 250));
+            },
+          ),
+        ],
+        locales: const [Locale('en', 'US')],
+        devices: [Devices.ios.iPhone14Pro],
+      ),
+      builder: (_) => MyApp(navigatorKey: appNavigatorKey),
+    ),
+  );
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key, required this.navigatorKey});
+
+  final GlobalKey<NavigatorState> navigatorKey;
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      navigatorKey: navigatorKey,
+      // ignore: deprecated_member_use
+      useInheritedMediaQuery: true,
+      locale: DevicePreview.locale(context),
+      builder: DevicePreview.appBuilder,
+      routes: {
+        '/home': (_) => const HomeScreen(),
+        '/profile': (_) => const ProfileScreen(),
+      },
+      initialRoute: '/home',
+    );
+  }
+}
+```
+
 ### Click "Generate Screenshots" in the toolbar
 
 The plugin will:
 
 1. Loop through every `device × locale × screen` combination
 2. Programmatically switch the device and locale via `DevicePreviewStore`
-3. Swap the displayed screen via the `AutoshotController`
+3. Select the target screen (route navigation or widget mode)
 4. Wait for the frame to settle
 5. Capture the pixels as PNG
 6. Package everything into a `.zip` and trigger a browser download
@@ -138,7 +243,7 @@ AutoshotToolbar(
 ## Architecture
 
 ```
-AutoshotController        ← shared state (current screen override)
+AutoshotController        ← shared state (widget mode screen override)
         │
         ├── AutoshotApp          ← widget wrapper inside DevicePreview.builder
         │       shows controller.currentScreen ?? normalApp
@@ -149,7 +254,8 @@ AutoshotController        ← shared state (current screen override)
                         │
                         ├── changes device via store.selectDevice()
                         ├── changes locale via store.data.copyWith(locale:)
-                        ├── swaps screen via controller.showScreen()
+                  ├── either navigates route OR swaps widget screen
+                  ├── optional screen.prepare()
                         ├── waits for frame settle
                         ├── captures via DevicePreview.screenshot()
                         └── packages results → ZIP → browser download

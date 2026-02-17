@@ -34,7 +34,7 @@ enum AutoshotDelivery {
 ///       controller: controller,
 ///       config: AutoshotConfig(
 ///         screens: [
-///           ScreenEntry(name: 'home', builder: (_) => HomeScreen()),
+///           ScreenEntry.widget(name: 'home', builder: (_) => HomeScreen()),
 ///         ],
 ///         locales: [Locale('en'), Locale('fr')],
 ///         devices: [Devices.ios.iPhone14Pro, Devices.android.samsungGalaxyS20],
@@ -62,12 +62,10 @@ class AutoshotToolbar extends StatefulWidget {
   final AutoshotDelivery delivery;
 
   @override
-  State<AutoshotToolbar> createState() =>
-      _AutoshotToolbarState();
+  State<AutoshotToolbar> createState() => _AutoshotToolbarState();
 }
 
-class _AutoshotToolbarState
-    extends State<AutoshotToolbar> {
+class _AutoshotToolbarState extends State<AutoshotToolbar> {
   bool _isRunning = false;
   int _current = 0;
   int _total = 0;
@@ -86,9 +84,7 @@ class _AutoshotToolbarState
             '${widget.config.locales.length} locales · '
             '${widget.config.devices.length} devices',
           ),
-          subtitle: Text(
-            '${widget.config.totalScreenshots} screenshots total',
-          ),
+          subtitle: Text('${widget.config.totalScreenshots} screenshots total'),
           dense: true,
         ),
 
@@ -231,17 +227,12 @@ class _ProgressTile extends StatelessWidget {
           const SizedBox(height: 8),
           ClipRRect(
             borderRadius: BorderRadius.circular(4),
-            child: LinearProgressIndicator(
-              value: progress,
-              minHeight: 6,
-            ),
+            child: LinearProgressIndicator(value: progress, minHeight: 6),
           ),
           const SizedBox(height: 6),
           Text(
             description,
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.hintColor,
-            ),
+            style: theme.textTheme.bodySmall?.copyWith(color: theme.hintColor),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),

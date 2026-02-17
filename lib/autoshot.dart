@@ -15,8 +15,8 @@
 /// Autoshot(
 ///   config: AutoshotConfig(
 ///     screens: [
-///       ScreenEntry(name: 'home', builder: (_) => HomeScreen()),
-///       ScreenEntry(name: 'profile', builder: (_) => ProfileScreen()),
+///       ScreenEntry.widget(name: 'home', builder: (_) => HomeScreen()),
+///       ScreenEntry.widget(name: 'profile', builder: (_) => ProfileScreen()),
 ///     ],
 ///     locales: [Locale('en', 'US'), Locale('fr', 'FR')],
 ///     devices: [Devices.ios.iPhone14Pro, Devices.android.samsungGalaxyS20],

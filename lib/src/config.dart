@@ -1,6 +1,17 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 
+/// Callback used to navigate to a target screen inside the real app shell.
+///
+/// This is executed by [AutoshotRunner] before each capture when using
+/// [ScreenEntry.route].
+typedef ScreenNavigationCallback = Future<void> Function(BuildContext context);
+
+/// Optional hook that runs after screen selection/navigation and before capture.
+///
+/// Use this to wait for async initialization specific to a screen.
+typedef ScreenPrepareCallback = Future<void> Function(BuildContext context);
+
 /// A single screen entry to be captured during the automation loop.
 ///
 /// Each [ScreenEntry] represents one "page" of the app that will be
@@ -17,13 +28,49 @@ class ScreenEntry {
   /// The widget is rendered inside a [MaterialApp] shell configured
   /// with the current device preview locale and theme, so it should
   /// typically return a [Scaffold] or equivalent page-level widget.
-  final WidgetBuilder builder;
+  ///
+  /// Used by [ScreenEntry.widget].
+  final WidgetBuilder? builder;
 
-  /// Creates a screen entry.
+  /// A callback that navigates to this screen inside the real app shell.
+  ///
+  /// Used by [ScreenEntry.route].
+  final ScreenNavigationCallback? navigate;
+
+  /// Optional hook invoked before capture for this screen.
+  final ScreenPrepareCallback? prepare;
+
+  /// Creates a widget-based screen entry.
+  ///
+  /// Deprecated in favor of [ScreenEntry.widget].
   const ScreenEntry({
     required this.name,
+    required WidgetBuilder this.builder,
+    this.prepare,
+  }) : navigate = null;
+
+  /// Creates a widget-based screen entry.
+  ///
+  /// This mode renders the screen in an isolated shell.
+  const ScreenEntry.widget({
+    required this.name,
     required this.builder,
-  });
+    this.prepare,
+  }) : navigate = null;
+
+  /// Creates a route-based screen entry.
+  ///
+  /// This mode captures through your app's own navigation tree,
+  /// preserving providers and initialized dependencies from your
+  /// real app shell.
+  const ScreenEntry.route({
+    required this.name,
+    required this.navigate,
+    this.prepare,
+  }) : builder = null;
+
+  /// Whether this entry uses route-based navigation.
+  bool get isRouteBased => navigate != null;
 }
 
 /// Configuration for the automated screenshot generation.

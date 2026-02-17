@@ -1,13 +1,31 @@
 import 'package:autoshot/autoshot.dart';
 import 'package:flutter/material.dart';
 
+final GlobalKey<NavigatorState> appNavigatorKey = GlobalKey<NavigatorState>();
+
 void main() {
   runApp(
     Autoshot(
       config: AutoshotConfig(
         screens: [
-          ScreenEntry(name: 'home', builder: (_) => const HomeScreen()),
-          ScreenEntry(name: 'detail', builder: (_) => const DetailScreen()),
+          ScreenEntry.route(
+            name: 'home',
+            navigate: (_) async {
+              appNavigatorKey.currentState?.pushNamedAndRemoveUntil(
+                '/home',
+                (route) => false,
+              );
+            },
+          ),
+          ScreenEntry.route(
+            name: 'detail',
+            navigate: (_) async {
+              appNavigatorKey.currentState?.pushNamedAndRemoveUntil(
+                '/detail',
+                (route) => false,
+              );
+            },
+          ),
         ],
         locales: const [Locale('en', 'US')],
         devices: [Devices.ios.iPhone13ProMax],
@@ -18,17 +36,20 @@ void main() {
           useMaterial3: true,
         ),
       ),
-      builder: (context) => const MyApp(),
+      builder: (context) => MyApp(navigatorKey: appNavigatorKey),
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({super.key, required this.navigatorKey});
+
+  final GlobalKey<NavigatorState> navigatorKey;
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navigatorKey,
       // ignore: deprecated_member_use
       useInheritedMediaQuery: true,
       locale: DevicePreview.locale(context),
@@ -40,7 +61,11 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      home: const HomeScreen(),
+      initialRoute: '/home',
+      routes: {
+        '/home': (_) => const HomeScreen(),
+        '/detail': (_) => const DetailScreen(),
+      },
     );
   }
 }
