@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.1
+
+- Updated SDK constraints for better compatibility.
+
 ## 1.1.0
 
 - Fixed `DevicePreview` compatibility issues with `backgroundColor` and `padding`.
