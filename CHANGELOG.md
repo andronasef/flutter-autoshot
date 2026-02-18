@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.3.3
+
+- Optimized screenshot engine performance: reordered capture loop from `device → locale → screen` to `device → screen → locale`.
+- Significantly reduced navigation overhead: route-based screens are now navigated to only once per device, with all locales captured on the same page.
+
 ## 1.3.2
 
 - Fixed `_wrapScreen` dark-mode handling: replaced `DevicePreview.isDarkMode()` (non-existent API) with `ThemeMode.system`, which correctly reads the `platformBrightness` that `DevicePreview.appBuilder` injects.

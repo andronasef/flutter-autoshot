@@ -92,31 +92,41 @@ class AutoshotRunner {
           store.toggleFrame();
         }
 
-        for (final locale in config.locales) {
-          // ── Set locale ──────────────────────────────────────────
-          // Use locale.toString() which produces underscore-separated format
-          // (e.g. 'en_US') that DevicePreview expects. toLanguageTag() produces
-          // hyphen-separated BCP 47 format ('en-US') which DevicePreview's
-          // split('_') parser cannot handle, resulting in a malformed locale.
-          store.data = store.data.copyWith(locale: locale.toString());
-          // Notify external localisation systems (e.g. easy_localization).
-          if (config.onLocaleChanged != null) {
+        for (final screen in config.screens) {
+          // ── Navigate to screen ONCE, then iterate locales ────────
+          // This avoids re-navigating for every locale, which is the
+          // most expensive part of the capture loop.
+          if (screen.isRouteBased) {
+            controller.reset();
             // ignore: use_build_context_synchronously
-            await config.onLocaleChanged!(context, locale);
+            await screen.navigate!(context);
+            // Let the initial navigation settle before switching locales.
             await _settle();
           }
-          for (final screen in config.screens) {
+
+          for (final locale in config.locales) {
             current++;
             final description =
                 '${device.name} / ${locale.toLanguageTag()} / ${screen.name}';
             onProgress?.call(current, total, description);
 
-            // ── Set screen content ────────────────────────────────
-            if (screen.isRouteBased) {
-              controller.reset();
+            // ── Set locale ──────────────────────────────────────────
+            // Use locale.toString() which produces underscore-separated format
+            // (e.g. 'en_US') that DevicePreview expects. toLanguageTag() produces
+            // hyphen-separated BCP 47 format ('en-US') which DevicePreview's
+            // split('_') parser cannot handle, resulting in a malformed locale.
+            store.data = store.data.copyWith(locale: locale.toString());
+            // Notify external localisation systems (e.g. easy_localization).
+            if (config.onLocaleChanged != null) {
               // ignore: use_build_context_synchronously
-              await screen.navigate!(context);
-            } else {
+              await config.onLocaleChanged!(context, locale);
+              await _settle();
+            }
+
+            // ── Set screen content (widget-based only) ────────────
+            // Route-based screens stay on the same navigated route;
+            // widget-based screens are re-wrapped with the new locale.
+            if (!screen.isRouteBased) {
               controller.showScreen(
                 // ignore: use_build_context_synchronously
                 _wrapScreen(context, screen, locale),
