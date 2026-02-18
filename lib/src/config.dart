@@ -12,6 +12,13 @@ typedef ScreenNavigationCallback = Future<void> Function(BuildContext context);
 /// Use this to wait for async initialization specific to a screen.
 typedef ScreenPrepareCallback = Future<void> Function(BuildContext context);
 
+/// Callback invoked when the autoshot runner switches to a new locale.
+///
+/// Use this to synchronise external localisation systems (e.g.
+/// easy_localization) that are not driven by DevicePreview's locale.
+typedef AutoshotLocaleChangedCallback = Future<void> Function(
+    BuildContext context, Locale locale);
+
 /// A single screen entry to be captured during the automation loop.
 ///
 /// Each [ScreenEntry] represents one "page" of the app that will be
@@ -106,6 +113,13 @@ class AutoshotConfig {
   /// Defaults to [locales] when omitted.
   final List<Locale>? supportedLocales;
 
+  /// Optional callback invoked when the runner switches locale.
+  ///
+  /// Use this to update external localisation systems (e.g.
+  /// `context.setLocale(locale)` for easy_localization) that are not
+  /// driven by DevicePreview's internal locale state.
+  final AutoshotLocaleChangedCallback? onLocaleChanged;
+
   /// Whether the device frame chrome should be included in the captured
   /// image. When `false` (default), captures only the app viewport.
   final bool includeDeviceFrame;
@@ -124,6 +138,7 @@ class AutoshotConfig {
     this.darkTheme,
     this.localizationsDelegates,
     this.supportedLocales,
+    this.onLocaleChanged,
     this.includeDeviceFrame = false,
     this.settleDelay = const Duration(milliseconds: 500),
   });

@@ -1,0 +1,48 @@
+{
+  "@@locale": "en",
+
+  "appName": "Memos",
+  "@appName": { "description": "Application name." },
+
+  "homeGreeting": "Good morning!",
+  "@homeGreeting": { "description": "Greeting shown on the home screen." },
+
+  "homeSummary": "You have 4 memos today.",
+  "@homeSummary": { "description": "Summary line on the home screen." },
+
+  "memo1": "Buy groceries",
+  "@memo1": { "description": "First sample memo item." },
+
+  "memo2": "Call the doctor",
+  "@memo2": { "description": "Second sample memo item." },
+
+  "memo3": "Review pull requests",
+  "@memo3": { "description": "Third sample memo item." },
+
+  "memo4": "Read for 30 minutes",
+  "@memo4": { "description": "Fourth sample memo item." },
+
+  "detailTitle": "Details",
+  "@detailTitle": { "description": "Detail screen app bar title." },
+
+  "detailHeadline": "Stay Organised",
+  "@detailHeadline": { "description": "Detail screen main headline." },
+
+  "detailBody": "Capture ideas, reminders, and to-dos — all in one place.",
+  "@detailBody": { "description": "Detail screen body paragraph." },
+
+  "cta": "Create memo",
+  "@cta": { "description": "Call-to-action button label." },
+
+  "statsTitle": "Stats",
+  "@statsTitle": { "description": "Stats screen app bar title." },
+
+  "statTotal": "Total memos",
+  "@statTotal": { "description": "Total memos stat label." },
+
+  "statWeek": "Added this week",
+  "@statWeek": { "description": "Weekly additions stat label." },
+
+  "statTags": "Tags used",
+  "@statTags": { "description": "Tags used stat label." }
+}

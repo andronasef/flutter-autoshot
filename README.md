@@ -25,7 +25,7 @@ This plugin turns that into a single button click.
 
 ```yaml
 dependencies:
-  autoshot: ^1.2.0
+  autoshot: ^1.3.2
 ```
 
 > **Note:** You do **not** need to add `device_preview` separately. It is re-exported by `autoshot`.
@@ -47,8 +47,8 @@ Autoshot(
     ],
     locales: [Locale('en', 'US'), Locale('fr', 'FR'), Locale('ar')],
     devices: [
-      Devices.ios.iPhone13ProMax,
-      Devices.ios.iPadPro11Inches,
+      Devices.ios.iPhone16ProMax,
+      Devices.ios.iPad,
       Devices.android.samsungGalaxyS20,
     ],
     // Optional:
@@ -89,8 +89,8 @@ DevicePreview(
         ],
         locales: [Locale('en', 'US'), Locale('fr', 'FR'), Locale('ar')],
         devices: [
-          Devices.ios.iPhone13ProMax,
-          Devices.ios.iPadPro11Inches,
+          Devices.ios.iPhone16ProMax,
+          Devices.ios.iPad,
           Devices.android.samsungGalaxyS20,
         ],
       ),
@@ -192,8 +192,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       navigatorKey: navigatorKey,
-      // ignore: deprecated_member_use
-      useInheritedMediaQuery: true,
+      useInheritedMediaQuery: true, // required for DevicePreview media query injection
       locale: DevicePreview.locale(context),
       builder: DevicePreview.appBuilder,
       routes: {
@@ -219,17 +218,18 @@ The plugin will:
 
 ## Configuration
 
-| Parameter                | Type                           | Default             | Description                      |
-| ------------------------ | ------------------------------ | ------------------- | -------------------------------- |
-| `screens`                | `List<ScreenEntry>`            | required            | Pages to screenshot              |
-| `locales`                | `List<Locale>`                 | required            | Languages to iterate             |
-| `devices`                | `List<DeviceInfo>`             | required            | Target devices                   |
-| `theme`                  | `ThemeData?`                   | `ThemeData.light()` | Light theme for captures         |
-| `darkTheme`              | `ThemeData?`                   | `ThemeData.dark()`  | Dark theme for captures          |
-| `localizationsDelegates` | `List<LocalizationsDelegate>?` | `null`              | Your app's l10n delegates        |
-| `supportedLocales`       | `List<Locale>?`                | `locales`           | Supported locales list           |
-| `includeDeviceFrame`     | `bool`                         | `false`             | Include device chrome in capture |
-| `settleDelay`            | `Duration`                     | `500ms`             | Wait time after state changes    |
+| Parameter                | Type                             | Default             | Description                                             |
+| ------------------------ | -------------------------------- | ------------------- | ------------------------------------------------------- |
+| `screens`                | `List<ScreenEntry>`              | required            | Pages to screenshot                                     |
+| `locales`                | `List<Locale>`                   | required            | Languages to iterate                                    |
+| `devices`                | `List<DeviceInfo>`               | required            | Target devices                                          |
+| `theme`                  | `ThemeData?`                     | `ThemeData.light()` | Light theme for captures                                |
+| `darkTheme`              | `ThemeData?`                     | `ThemeData.dark()`  | Dark theme for captures                                 |
+| `localizationsDelegates` | `List<LocalizationsDelegate>?`   | `null`              | Your app's l10n delegates                               |
+| `supportedLocales`       | `List<Locale>?`                  | `locales`           | Supported locales list                                  |
+| `onLocaleChanged`        | `AutoshotLocaleChangedCallback?` | `null`              | Hook for external l10n systems (e.g. easy_localization) |
+| `includeDeviceFrame`     | `bool`                           | `false`             | Include device chrome in capture                        |
+| `settleDelay`            | `Duration`                       | `500ms`             | Wait time after state changes                           |
 
 ## Delivery Modes
 
@@ -267,9 +267,9 @@ The ZIP contains PNGs with the naming convention:
 
 ```
 autoshot/
-  iphone_13_pro_max_en_us_home.png
-  iphone_13_pro_max_en_us_profile.png
-  iphone_13_pro_max_fr_fr_home.png
+  iphone_16_pro_max_en_us_home.png
+  iphone_16_pro_max_en_us_profile.png
+  iphone_16_pro_max_fr_fr_home.png
   ...
   samsung_galaxy_s20_ar_home.png
   ...

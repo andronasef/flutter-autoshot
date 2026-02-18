@@ -1,0 +1,19 @@
+{
+  "@@locale": "fr",
+
+  "appName": "Mémos",
+  "homeGreeting": "Bonjour !",
+  "homeSummary": "Vous avez 4 mémos aujourd'hui.",
+  "memo1": "Faire les courses",
+  "memo2": "Appeler le médecin",
+  "memo3": "Revoir les pull requests",
+  "memo4": "Lire 30 minutes",
+  "detailTitle": "Détails",
+  "detailHeadline": "Restez Organisé",
+  "detailBody": "Capturez idées, rappels et tâches — le tout en un seul endroit.",
+  "cta": "Créer un mémo",
+  "statsTitle": "Statistiques",
+  "statTotal": "Mémos au total",
+  "statWeek": "Ajoutés cette semaine",
+  "statTags": "Tags utilisés"
+}

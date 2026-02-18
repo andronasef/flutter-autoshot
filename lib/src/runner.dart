@@ -94,8 +94,17 @@ class AutoshotRunner {
 
         for (final locale in config.locales) {
           // ── Set locale ──────────────────────────────────────────
-          store.data = store.data.copyWith(locale: locale.toLanguageTag());
-
+          // Use locale.toString() which produces underscore-separated format
+          // (e.g. 'en_US') that DevicePreview expects. toLanguageTag() produces
+          // hyphen-separated BCP 47 format ('en-US') which DevicePreview's
+          // split('_') parser cannot handle, resulting in a malformed locale.
+          store.data = store.data.copyWith(locale: locale.toString());
+          // Notify external localisation systems (e.g. easy_localization).
+          if (config.onLocaleChanged != null) {
+            // ignore: use_build_context_synchronously
+            await config.onLocaleChanged!(context, locale);
+            await _settle();
+          }
           for (final screen in config.screens) {
             current++;
             final description =
@@ -165,6 +174,9 @@ class AutoshotRunner {
       builder: DevicePreview.appBuilder,
       theme: config.theme ?? ThemeData.light(),
       darkTheme: config.darkTheme ?? ThemeData.dark(),
+      // ThemeMode.system lets MaterialApp read the platformBrightness that
+      // DevicePreview.appBuilder injects, so dark-mode is respected correctly.
+      themeMode: ThemeMode.system,
       localizationsDelegates: config.localizationsDelegates,
       supportedLocales: config.supportedLocales ?? config.locales,
       debugShowCheckedModeBanner: false,

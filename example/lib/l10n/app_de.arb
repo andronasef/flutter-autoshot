@@ -1,0 +1,19 @@
+{
+  "@@locale": "de",
+
+  "appName": "Notizen",
+  "homeGreeting": "Guten Morgen!",
+  "homeSummary": "Du hast heute 4 Notizen.",
+  "memo1": "Einkaufen gehen",
+  "memo2": "Arzt anrufen",
+  "memo3": "Pull Requests prüfen",
+  "memo4": "30 Minuten lesen",
+  "detailTitle": "Details",
+  "detailHeadline": "Bleibe Organisiert",
+  "detailBody": "Erfasse Ideen, Erinnerungen und Aufgaben — alles an einem Ort.",
+  "cta": "Notiz erstellen",
+  "statsTitle": "Statistiken",
+  "statTotal": "Notizen gesamt",
+  "statWeek": "Diese Woche hinzugefügt",
+  "statTags": "Tags verwendet"
+}
