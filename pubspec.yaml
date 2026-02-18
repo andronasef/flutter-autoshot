@@ -1,5 +1,5 @@
 name: autoshot
-version: 1.3.3
+version: 1.4.0
 description:
   Automate App Store and Play Store screenshot generation across multiple
   devices, locales, and screens with web download and mobile file export.

@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.4.0
+
+- Added `appName` to `AutoshotConfig` for customising exported filenames.
+- Updated ZIP archive naming convention: now named `{appName}_autoshot_{timestamp}.zip` (e.g. `my_app_autoshot_2026-02-18_14-30-00.zip`).
+- `devices` in `AutoshotConfig` is now optional.
+- Added default devices: when no devices are specified, it defaults to a big phone ('phone') and a small tablet ('tablet') via `Devices.android`.
+
 ## 1.3.3
 
 - Optimized screenshot engine performance: reordered capture loop from `device → locale → screen` to `device → screen → locale`.

@@ -82,7 +82,7 @@ class _AutoshotToolbarState extends State<AutoshotToolbar> {
           title: Text(
             '${widget.config.screens.length} screens · '
             '${widget.config.locales.length} locales · '
-            '${widget.config.devices.length} devices',
+            '${widget.config.effectiveDevices.length} devices',
           ),
           subtitle: Text('${widget.config.totalScreenshots} screenshots total'),
           dense: true,
@@ -149,7 +149,10 @@ class _AutoshotToolbarState extends State<AutoshotToolbar> {
       // ── Deliver results ─────────────────────────────────────
       switch (widget.delivery) {
         case AutoshotDelivery.zip:
-          destination = await downloader.downloadScreenshotsAsZip(results);
+          destination = await downloader.downloadScreenshotsAsZip(
+            results,
+            appName: widget.config.effectiveAppName,
+          );
           break;
         case AutoshotDelivery.individual:
           for (final shot in results) {

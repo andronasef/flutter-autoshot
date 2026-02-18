@@ -83,7 +83,7 @@ class AutoshotRunner {
     final total = config.totalScreenshots;
 
     try {
-      for (final device in config.devices) {
+      for (final device in config.effectiveDevices) {
         // ── Set device ────────────────────────────────────────────
         store.selectDevice(device.identifier);
 

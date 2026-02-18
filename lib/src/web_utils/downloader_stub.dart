@@ -12,7 +12,9 @@ import '../runner.dart';
 /// On the web, the `downloader_web.dart` implementation is loaded
 /// via conditional imports.
 Future<String> downloadScreenshotsAsZip(
-    List<AutoshotCapture> screenshots) async {
+  List<AutoshotCapture> screenshots, {
+  String appName = 'app',
+}) async {
   final targetDirectory = await _resolveTargetDirectory();
   final outputDirectory =
       Directory('${targetDirectory.path}${Platform.pathSeparator}autoshot');
@@ -28,8 +30,9 @@ Future<String> downloadScreenshotsAsZip(
   }
 
   final zipBytes = ZipEncoder().encode(archive);
+  final zipName = _buildZipName(appName);
   final zipPath =
-      '${outputDirectory.path}${Platform.pathSeparator}autoshot.zip';
+      '${outputDirectory.path}${Platform.pathSeparator}$zipName';
   final zipFile = File(zipPath);
   await zipFile.writeAsBytes(zipBytes, flush: true);
 
@@ -52,6 +55,23 @@ Future<String> downloadFile(String fileName, Uint8List bytes) async {
   await outputFile.writeAsBytes(bytes, flush: true);
 
   return filePath;
+}
+
+String _buildZipName(String appName) {
+  final sanitised = appName
+      .toLowerCase()
+      .replaceAll(RegExp(r'[^\w]+'), '_')
+      .replaceAll(RegExp(r'_+'), '_')
+      .replaceAll(RegExp(r'^_|_$'), '');
+  final now = DateTime.now();
+  final timestamp =
+      '${now.year.toString().padLeft(4, '0')}-'
+      '${now.month.toString().padLeft(2, '0')}-'
+      '${now.day.toString().padLeft(2, '0')}_'
+      '${now.hour.toString().padLeft(2, '0')}-'
+      '${now.minute.toString().padLeft(2, '0')}-'
+      '${now.second.toString().padLeft(2, '0')}';
+  return '${sanitised}_autoshot_$timestamp.zip';
 }
 
 Future<Directory> _resolveTargetDirectory() async {

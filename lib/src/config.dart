@@ -84,7 +84,7 @@ class ScreenEntry {
 ///
 /// Defines which [screens], [locales], and [devices] to iterate through.
 /// The total number of screenshots produced is
-/// `screens.length × locales.length × devices.length`.
+/// `screens.length × locales.length × effectiveDevices.length`.
 class AutoshotConfig {
   /// The list of screens / pages to capture.
   final List<ScreenEntry> screens;
@@ -93,7 +93,21 @@ class AutoshotConfig {
   final List<Locale> locales;
 
   /// The target devices (sourced from [Devices]).
-  final List<DeviceInfo> devices;
+  ///
+  /// When `null`, defaults to a phone and a tablet:
+  /// ```
+  /// [
+  ///   Devices.android.bigPhone.copyWith(name: 'phone'),
+  ///   Devices.android.smallTablet.copyWith(name: 'tablet'),
+  /// ]
+  /// ```
+  final List<DeviceInfo>? devices;
+
+  /// The application name used when naming the exported ZIP archive.
+  ///
+  /// The archive will be named `{appName}_autoshot_{timestamp}.zip`.
+  /// Defaults to `'app'` when omitted.
+  final String? appName;
 
   /// Light theme applied to the [MaterialApp] wrapper when capturing.
   ///
@@ -133,7 +147,8 @@ class AutoshotConfig {
   const AutoshotConfig({
     required this.screens,
     required this.locales,
-    required this.devices,
+    this.devices,
+    this.appName,
     this.theme,
     this.darkTheme,
     this.localizationsDelegates,
@@ -143,6 +158,21 @@ class AutoshotConfig {
     this.settleDelay = const Duration(milliseconds: 500),
   });
 
+  /// The resolved list of devices to capture.
+  ///
+  /// Returns [devices] if provided, otherwise returns the two built-in
+  /// defaults: a phone and a small tablet.
+  List<DeviceInfo> get effectiveDevices =>
+      devices ??
+      [
+        Devices.android.bigPhone.copyWith(name: 'phone'),
+        Devices.android.smallTablet.copyWith(name: 'tablet'),
+      ];
+
+  /// The resolved application name used for ZIP archive naming.
+  String get effectiveAppName => appName ?? 'app';
+
   /// Total number of screenshots that will be produced.
-  int get totalScreenshots => screens.length * locales.length * devices.length;
+  int get totalScreenshots =>
+      screens.length * locales.length * effectiveDevices.length;
 }
